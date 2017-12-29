@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project ver="10" name="python运行" libEmbed="true" icon="C:\360安全浏览器下载\www.ico.la_1eb2a550bd02b3097fca6e85ff872399_64X64.ico" ui="win" output="python运行.exe" CompanyName="单位名称" FileDescription="python运行" LegalCopyright="Copyright (C) aslyr 2017" ProductName="python运行" InternalName="python运行" FileVersion="0.0.0.08" ProductVersion="0.0.0.08" publishDir="/Publish/" dstrip="false">
+	<file name="main" path="main.aardio" comment="main.aardio"/>
+	<folder name="资源文件" path="res" embed="true"/>
+</project>

@@ -1,0 +1,80 @@
+import win.ui;
+import win.ui.layered
+/*DSG{{*/
+mainForm = win.form(text="python运行器";right=655;bottom=372;acceptfiles=1;max=false;topmost=1)
+mainForm.add(
+button={cls="button";text="运行";left=124;top=174;right=259;bottom=246;z=1};
+button2={cls="button";text="停止运行";left=339;top=174;right=474;bottom=246;z=4};
+edit={cls="edit";text="请拖动py主文件至窗口";left=255;top=60;right=541;bottom=87;acceptfiles=1;edge=1;multiline=1;readonly=1;z=2};
+pybox={cls="combobox";left=259;top=118;right=549;bottom=144;edge=1;items={};mode="dropdown";z=5};
+static={cls="static";text="要打开的python文件";left=106;top=64;right=236;bottom=87;bgcolor=12632256;clip=1;color=32768;font=LOGFONT(h=-14);transparent=1;z=3};
+static2={cls="static";text="工程目录下所有py文件
+请选择要运行的文件:";left=96;top=112;right=251;bottom=146;ah=1;aw=1;bgcolor=12632256;clip=1;color=32768;font=LOGFONT(h=-14);notify=1;transparent=1;z=6}
+)
+/*}}*/
+
+mainForm.pybox.oncommand = function(id,event){
+	//mainForm.msgbox( mainForm.pybox.text );
+	if(event=8){
+		mainForm.edit.text=mainForm.pybox.selText;
+	}
+	
+}
+
+
+
+
+
+
+import fsys
+fsys.enum( "/", "*.py",
+	function(dir,filename,fullpath,findData){ 
+		if(filename){ 
+           	mainForm.pybox.add(fullpath);
+		}
+		
+	},
+	function(dirpath,dirname){
+		
+		return true;
+	} 
+);
+
+
+
+
+mainForm.button2.oncommand = function(id,event){
+	//mainForm.msgbox( mainForm.button2.text );
+	f.terminate();
+	io.close()
+	
+}
+mainForm.wndproc = function(hwnd,message,wParam,lParam){
+        select(message) { 
+
+        case 0x233/*_WM_DROPFILES*/{ 
+                mainForm.edit.text="";
+                path =  win.getDropFile(wParam )[1];  
+                content = string.load(path);
+                mainForm.edit.text=path;
+        } 
+
+    }
+}
+mainForm.button.oncommand = function(id,event){
+	//mainForm.msgbox( mainForm.button.text );
+	import process
+	io.open()
+	
+	pyName =mainForm.edit.text;
+    cmd='python '+pyName;
+	f=process(cmd)
+	
+    
+	
+}
+
+
+mainForm.enableDpiScaling();
+mainForm.show();
+return win.loopMessage(); 

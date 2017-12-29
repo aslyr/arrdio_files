@@ -1,0 +1,55 @@
+import win.ui;
+/*DSG{{*/
+mainForm = win.form(text="还款计算器";right=617;bottom=422;bgcolor=15780518)
+mainForm.add(
+btn_start={cls="button";text="开始计算";left=375;top=150;right=468;bottom=188;bgcolor=255;z=12};
+edit_lilv={cls="edit";left=83;top=86;right=217;bottom=123;edge=1;multiline=1;z=2};
+edit_money={cls="edit";left=84;top=26;right=218;bottom=63;edge=1;multiline=1;num=1;z=1};
+edit_pay={cls="edit";left=349;top=83;right=483;bottom=120;edge=1;multiline=1;num=1;z=10};
+edit_print={cls="edit";left=83;top=214;right=607;bottom=401;edge=1;multiline=1;vscroll=1;z=7};
+edit_result={cls="edit";left=82;top=149;right=216;bottom=186;edge=1;multiline=1;z=5};
+edit_year={cls="edit";left=350;top=28;right=484;bottom=65;edge=1;multiline=1;num=1;z=8};
+static={cls="static";text="借款数";left=15;top=32;right=65;bottom=54;transparent=1;z=3};
+static2={cls="static";text="利率";left=17;top=98;right=67;bottom=120;transparent=1;z=4};
+static3={cls="static";text="共付利息";left=15;top=156;right=65;bottom=178;transparent=1;z=6};
+static4={cls="static";text="年限";left=281;top=34;right=331;bottom=56;transparent=1;z=9};
+static5={cls="static";text="每年还款";left=281;top=85;right=331;bottom=107;transparent=1;z=11}
+)
+/*}}*/
+
+import console;
+
+
+
+function Eval(money,lilv,pay,year){
+    zonglixi=0
+	for(i=1;year;1){
+		var lixi=tonumber(string.format("%.2f",money*lilv/100 )) ;
+		zonglixi=zonglixi+lixi;
+		mainForm.edit_print.print('第'+i+'年的利息为：   '+lixi);
+		money=money+lixi;
+		money=money-pay;
+	    mainForm.edit_print.print('第'+i+'年剩余金钱总和：   '+money);
+	    mainForm.edit_result.text=tostring(zonglixi);
+	};
+	}
+	
+
+mainForm.btn_start.oncommand = function(id,event){
+	//mainForm.msgbox( mainForm.btn_start.text );
+	var money=tonumber( mainForm.edit_money.text);
+	var lilv=tonumber( mainForm.edit_lilv.text);
+	var pay=tonumber( mainForm.edit_pay.text);
+	var year=tonumber( mainForm.edit_year.text);
+	mainForm.edit_print.text="";
+	if(money=null or lilv=null or pay=null or year=null){
+		mainForm.msgbox("请输入正确的数值","错误！")
+	}
+	Eval(money,lilv,pay,year);
+	
+}
+
+mainForm.enableDpiScaling();
+mainForm.show();
+
+return win.loopMessage(); 

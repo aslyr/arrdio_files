@@ -1,0 +1,132 @@
+import win.ui;
+/*DSG{{*/
+mainForm = win.form(text="aardio form";right=759;bottom=469)
+mainForm.add(
+btn_pause={cls="button";text="暂停采集";left=565;top=292;right=623;bottom=324;z=4};
+btn_start={cls="button";text="开始采集";left=450;top=294;right=508;bottom=322;z=3};
+edit={cls="edit";left=17;top=71;right=427;bottom=456;autohscroll=false;edge=1;hscroll=1;multiline=1;vscroll=1;z=5};
+edit_first={cls="edit";left=481;top=196;right=530;bottom=222;edge=1;multiline=1;z=7};
+edit_getimg_rul={cls="edit";text=".page-list img";left=549;top=109;right=642;bottom=136;edge=1;z=13};
+edit_imgpage_rule={cls="edit";text=".page a:first";left=549;top=146;right=642;bottom=173;edge=1;z=15};
+edit_imgpath_rule={cls="edit";text="h2";left=549;top=62;right=642;bottom=89;edge=1;z=11};
+edit_last={cls="edit";left=581;top=195;right=631;bottom=222;edge=1;multiline=1;z=9};
+edit_url={cls="edit";text="http://www.keke123.cc/gaoqing/cn/xiuren/2017/1222/26397.html";left=56;top=20;right=377;bottom=48;edge=1;z=1};
+static={cls="static";text="获取图片页数规则";left=443;top=155;right=541;bottom=179;transparent=1;z=16};
+static2={cls="static";text="从";left=461;top=202;right=494;bottom=227;transparent=1;z=6};
+static3={cls="static";text="页  到";left=542;top=201;right=585;bottom=230;transparent=1;z=8};
+static4={cls="static";text="页";left=647;top=203;right=680;bottom=228;transparent=1;z=10};
+static5={cls="static";text="图片名规则";left=443;top=67;right=507;bottom=91;transparent=1;z=12};
+static6={cls="static";text="获取图片规则";left=443;top=113;right=518;bottom=137;transparent=1;z=14};
+网址={cls="static";text="网址";left=21;top=25;right=62;bottom=50;transparent=1;z=2}
+)
+/*}}*/
+
+import console
+// 下载http://www.keke123.cc/图片方法。
+function get_url(urls,page_num){
+    //通过jquery获取共有几页照片，然后遍历取出所有页面url
+    var url_tab={};
+    url_tab[1]=urls;
+    if(tonumber(page_num,10) >=2){
+    	for(i=2;page_num;1){
+			var num=string.lastIndexAny(urls,".")
+			var url=string.sub(urls,1,num-1)+"_"+i+".html";
+			table.push(url_tab,url)
+	
+		}
+    }
+	return url_tab; 
+	
+}
+function get_page_num(html,girlname_rule,imgpage_rule){
+    import fsys;
+	import web.mshtml; //导入mshtml，使用其jQuery解析地址
+	var webs=web.mshtml();
+		webs.write(html);
+	var page_nums=webs.jQuery(imgpage_rule).text();//使用jquery获取共几页内容
+	var page_num=string.match(page_nums,"\d+");//取出共page_num页
+	var girlname=webs.jQuery(girlname_rule).text();
+	var imgpath=fsys.createDir("/"+girlname);
+	return imgpath,page_num; 
+}
+
+function get_html(url){
+    //获取网页内容
+    import inet.http
+	import zlib  //如果网页压缩，解压缩
+	var net=inet.http(); //创建连接对象
+	var html,err=net.get(url);
+	
+	if(!html){
+		mainForm.edit.print(err)
+	}
+	var code=string.match(html,"charset=([\w-""]{1,10})\""") //用匹配取出charset值，然后判断是否为utf-8编码
+	
+	if(code!="utf-8" and code!="""utf-8" and code!="""UTF-8" and code!="UTF-8"){
+		html=string.fromto(html,0,65001) //转换非utf-8编码网页内容到utf-8
+	}
+	html=string.replace(html,"script","scropt") //阻止弹出网页cookie选项
+	return html; 
+}
+
+function get_imgpath(html,jpgs_rule){
+    //获取网页中的图片标题，图片的jquery对象
+    import fsys;
+    import web.mshtml; //导入mshtml，使用其jQuery解析地址
+	var webs=web.mshtml();
+		webs.write(html);
+	var jpgs=webs.jQuery(jpgs_rule);
+	
+	return jpgs; 
+}
+
+function download_jpg(imgpath,jpgs,jpg_num){
+        //下载图片
+	    import inet.http
+	    var tab={}
+	    //用jquery对象length取出图片总数，遍历取出图片的src、alt属性。
+		for(i=0;jpgs.length-1;1){
+				table.push(tab,jpgs[i].src);
+  		
+		}
+		
+		for(i=1;#tab;1){
+			mainForm.edit.print("正在下载"+(i)+"张............"+imgpath)
+			mainForm.edit.print("一共有"+#tab+"张照片"+"正在下载"+(i)+"张............");
+			string.save(imgpath+"/"+jpg_num+".jpg",inet.http().get(tab[i]))//保存图片二进制数据到文件。
+			jpg_num=jpg_num+1
+			mainForm.edit.print(jpg_num)	
+		
+		}
+		mainForm.edit.print("全部下载完毕")
+	    return jpg_num; 
+				    
+	
+}
+
+mainForm.btn_start.oncommand = function(id,event){
+   // mainForm.edit.text=null;
+    
+	var urls=mainForm.edit_url.text;
+	var girlname_rule=mainForm.edit_imgpath_rule.text;
+	var jpgs_rule=mainForm.edit_getimg_rul.text;
+	var imgpage_rule=mainForm.edit_imgpage_rule.text;
+	var html=get_html(urls);
+	var imgpath,page_num=get_page_num(html,girlname_rule,imgpage_rule);
+	var url_tab=get_url(urls,page_num);
+	mainForm.edit.print(url_tab,imgpath,page_num);
+	var jpg_num=1
+	for(i=1;#url_tab;1){
+		html=get_html(url_tab[i])
+		var jpgs=get_imgpath(html,jpgs_rule);
+		jpg_num=download_jpg(imgpath,jpgs,jpg_num);	
+	
+	}
+
+	
+}
+
+
+mainForm.enableDpiScaling();
+mainForm.show();
+win.loopMessage(); 

@@ -1,0 +1,49 @@
+import win.ui;
+/*DSG{{*/
+mainForm = win.form(text="aardio form";right=759;bottom=469)
+mainForm.add(
+button={cls="button";text="button";left=626;top=301;right=686;bottom=359;z=2};
+button2={cls="button";text="button2";left=577;top=203;right=637;bottom=261;z=4};
+button3={cls="button";text="button3";left=653;top=204;right=713;bottom=262;z=5};
+edit2={cls="edit";left=63;top=48;right=541;bottom=421;edge=1;hscroll=1;multiline=1;vscroll=1;z=1};
+plus={cls="plus";left=588;top=36;right=731;bottom=212;background="~\codes\我的代码段\http:\i.meizitu.net\2017\12\24b01.jpg";z=3}
+)
+/*}}*/
+
+mainForm.button2.oncommand = function(id,event){
+	//mainForm.msgbox( mainForm.button2.text );
+	
+	
+}
+import zlib
+import console
+import inet;
+import inet.http
+import web.mshtml
+var net=inet.http();
+var html=net.get('https://www.meitulu.com/item/7132.html')
+ 
+mainForm.button.oncommand = function(id,event){
+	//mainForm.msgbox( mainForm.button.text );
+	var doc=web.mshtml();
+	doc.write(html);
+	var title=doc.queryEles( className = "main-title")
+	var jpg=doc.jQuery(".content img")
+	jpg_url={}
+    for(i=0;jpg.length-1;1){
+    	
+	    var alt,src=jpg[i].alt,jpg[i].src;
+	    jpg_url[alt]=src
+    
+    }
+    mainForm.edit2.print(jpg_url)
+    mainForm.plus.background=net.get(jpg[2].src)
+		
+}
+
+
+
+mainForm.enableDpiScaling();
+mainForm.show();
+
+return win.loopMessage(); 
