@@ -10,7 +10,7 @@ edit_getimg_rul={cls="edit";text=".page-list img";left=549;top=109;right=642;bot
 edit_imgpage_rule={cls="edit";text=".page a:first";left=549;top=146;right=642;bottom=173;edge=1;z=15};
 edit_imgpath_rule={cls="edit";text="h2";left=549;top=62;right=642;bottom=89;edge=1;z=11};
 edit_last={cls="edit";left=581;top=195;right=631;bottom=222;edge=1;multiline=1;z=9};
-edit_url={cls="edit";text="http://www.keke123.cc/gaoqing/cn/xiuren/2017/1222/26397.html";left=56;top=20;right=377;bottom=48;edge=1;z=1};
+edit_url={cls="edit";text="http://www.keke123.cc/gaoqing/cn/xiuren/2017/1222/26397.html";left=56;top=20;right=457;bottom=48;edge=1;z=1};
 static={cls="static";text="获取图片页数规则";left=443;top=155;right=541;bottom=179;transparent=1;z=16};
 static2={cls="static";text="从";left=461;top=202;right=494;bottom=227;transparent=1;z=6};
 static3={cls="static";text="页  到";left=542;top=201;right=585;bottom=230;transparent=1;z=8};
@@ -21,7 +21,7 @@ static6={cls="static";text="获取图片规则";left=443;top=113;right=518;botto
 )
 /*}}*/
 
-import console
+import win
 // 下载http://www.keke123.cc/图片方法。
 function get_url(urls,page_num){
     //通过jquery获取共有几页照片，然后遍历取出所有页面url
@@ -80,32 +80,23 @@ function get_imgpath(html,jpgs_rule){
 	return jpgs; 
 }
 
-function download_jpg(imgpath,jpgs,jpg_num){
+function download_jpg(imgpath,tab,mainForm){
         //下载图片
 	    import inet.http
-	    var tab={}
-	    //用jquery对象length取出图片总数，遍历取出图片的src、alt属性。
-		for(i=0;jpgs.length-1;1){
-				table.push(tab,jpgs[i].src);
-  		
-		}
-		
 		for(i=1;#tab;1){
 			mainForm.edit.print("正在下载"+(i)+"张............"+imgpath)
 			mainForm.edit.print("一共有"+#tab+"张照片"+"正在下载"+(i)+"张............");
-			string.save(imgpath+"/"+jpg_num+".jpg",inet.http().get(tab[i]))//保存图片二进制数据到文件。
-			jpg_num=jpg_num+1
+			string.save(imgpath+"/"+i+".jpg",inet.http().get(tab[i]))//保存图片二进制数据到文件。
 			mainForm.edit.print(jpg_num)	
 		
 		}
-		mainForm.edit.print("全部下载完毕")
-	    return jpg_num; 
-				    
+		mainForm.edit.print("全部下载完成，请打开根目录查看")
+			    
 	
 }
 
 mainForm.btn_start.oncommand = function(id,event){
-   // mainForm.edit.text=null;
+    mainForm.edit.text=null;
     
 	var urls=mainForm.edit_url.text;
 	var girlname_rule=mainForm.edit_imgpath_rule.text;
@@ -115,17 +106,21 @@ mainForm.btn_start.oncommand = function(id,event){
 	var imgpath,page_num=get_page_num(html,girlname_rule,imgpage_rule);
 	var url_tab=get_url(urls,page_num);
 	mainForm.edit.print(url_tab,imgpath,page_num);
-	var jpg_num=1
+	var tab={}
 	for(i=1;#url_tab;1){
 		html=get_html(url_tab[i])
-		var jpgs=get_imgpath(html,jpgs_rule);
-		jpg_num=download_jpg(imgpath,jpgs,jpg_num);	
+		var jpgs=get_imgpath(html,jpgs_rule);	
+	    //用jquery对象length取出图片总数，遍历取出图片的src、alt属性。
+		for(x=0;jpgs.length-1;1){
+				table.push(tab,jpgs[x].src);
+  		
+		}
 	
 	}
-
+	
+	thread.invoke(download_jpg,imgpath,tab,mainForm);
 	
 }
-
 
 mainForm.enableDpiScaling();
 mainForm.show();
